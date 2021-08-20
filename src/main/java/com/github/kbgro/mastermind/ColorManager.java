@@ -1,47 +1,52 @@
 package com.github.kbgro.mastermind;
 
+import com.github.kbgro.mastermind.color.Color;
+import com.github.kbgro.mastermind.color.ColorFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class ColorManager {
-    final protected int nColors;
-    final protected Map<Color, Color> successor = new HashMap<>();
+    protected final int nrColors;
+    protected final Map<Color, Color> successor = new HashMap<>();
+    private final ColorFactory factory;
     private Color first;
 
-    public ColorManager(int nColors) {
-        this.nColors = nColors;
+    public ColorManager(int nrColors,  ColorFactory factory) {
+        this.nrColors = nrColors;
+        this.factory = factory;
         createOrdering();
     }
 
-    private void createOrdering() {
-        Color[] colors = createColors();
-        first = colors[0];
-        for (int i = 0; i < nColors - 1; i++) {
-            successor.put(colors[i], colors[i + 1]);
-        }
-    }
-
-    public Color newColor() {
-        return new Color();
-    }
-
     private Color[] createColors() {
-        Color[] colors = new Color[nColors];
+        var colors = new Color[nrColors];
         for (int i = 0; i < colors.length; i++) {
-            colors[i] = newColor();
+            colors[i] = factory.newColor();
         }
         return colors;
+    }
+
+    private void createOrdering() {
+        var colors = createColors();
+        first = colors[0];
+        for (int i = 0; i < nrColors - 1; i++) {
+            successor.put(colors[i], colors[i + 1]);
+        }
     }
 
     public Color firstColor() {
         return first;
     }
 
-    boolean thereIsNextColor(Color color) {
+    public boolean thereIsNextColor(Color color) {
         return successor.containsKey(color);
     }
 
     public Color nextColor(Color color) {
         return successor.get(color);
+    }
+
+    public int getNrColors() {
+        return nrColors;
     }
 }
