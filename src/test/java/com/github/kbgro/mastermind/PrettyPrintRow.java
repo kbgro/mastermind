@@ -1,5 +1,7 @@
 package com.github.kbgro.mastermind;
 
+import com.github.kbgro.mastermind.color.Color;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,14 +20,14 @@ public class PrettyPrintRow {
 
     public static String pprint(Row row) {
         StringBuilder string = new StringBuilder();
-        final var pRow = new PrintableRow(row);
+        var pRow = new PrintableRow(row);
         for (int i = 0; i < pRow.nOfColumns(); i++) {
-            string.append(colorToChar(pRow.position(i)));
+            string.append(pRow.pos(i));
         }
         string.append(" ");
-        string.append(pRow.matchedPositions());
+        string.append(pRow.full());
         string.append("/");
-        string.append(pRow.matchedColors());
+        string.append(pRow.partial());
         return string.toString();
     }
 

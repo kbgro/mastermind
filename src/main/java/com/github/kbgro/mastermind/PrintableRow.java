@@ -1,20 +1,22 @@
 package com.github.kbgro.mastermind;
 
+import com.github.kbgro.mastermind.color.Color;
+
 public class PrintableRow extends Row {
 
     protected PrintableRow(Row row) {
         super(row);
     }
 
-    public Color position(int i) {
-        return positions[i];
+    public Color pos(int i) {
+        return guess.getColor(i);
     }
 
-    public int matchedPositions() {
-        return matchedPositions;
+    public int full() {
+        return full;
     }
 
-    public int matchedColors() {
-        return matchedColors;
+    public int partial() {
+        return partial;
     }
 }

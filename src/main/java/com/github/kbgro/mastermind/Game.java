@@ -2,31 +2,39 @@ package com.github.kbgro.mastermind;
 
 public class Game {
     final Table table;
-    final private Row secretRow;
-    private final int nOfColumns;
+    final private Guess secret;
+    private final int nrOfColumns;
     boolean finished = false;
 
-    public Game(Table table, Color[] secret) {
+    public Game(Table table, Guess secret) {
         this.table = table;
-        this.secretRow = new Row(secret);
-        this.nOfColumns = secretRow.nOfColumns();
+        this.secret = secret;
+        this.nrOfColumns = this.secret.nrOfColumns();
     }
 
-    public void addNewGuess(Row row) {
+    private boolean itWasAWinningGuess(int positionMatch) {
+        return positionMatch == nrOfColumns;
+    }
+
+    public Row addNewGuess(Guess guess) {
+        assertNotFinished();
+        final int full = secret.nrOfFullMatches(guess);
+        final int partial = secret.nrOfPartialMatches(guess);
+        final var row = new Row(guess, full, partial);
+        table.addRow(row);
+        if (itWasAWinningGuess(full)) {
+            finished = true;
+        }
+        return row;
+    }
+
+    private void assertNotFinished() {
         if (isFinished()) {
             throw new IllegalArgumentException("You can not guess on a finished game.");
         }
-        final int positionMatch = secretRow.nMatchingPositions(row.positions);
-        final int positionColor = secretRow.nMatchingColors(row.positions);
-        row.setMatch(positionMatch, positionColor);
-
-        table.addRow(row);
-        if (positionMatch == nOfColumns)
-            finished = true;
     }
 
     public boolean isFinished() {
         return finished;
     }
-
 }
