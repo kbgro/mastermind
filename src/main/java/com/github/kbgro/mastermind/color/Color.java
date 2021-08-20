@@ -1,4 +1,4 @@
-package com.github.kbgro.mastermind;
+package com.github.kbgro.mastermind.color;
 
 /**
  * Represents a color in the MasterMind table.
