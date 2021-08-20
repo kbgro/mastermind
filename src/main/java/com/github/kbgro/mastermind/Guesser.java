@@ -2,60 +2,61 @@ package com.github.kbgro.mastermind;
 
 public abstract class Guesser {
     protected final Table table;
-    private final ColorManager manager;
-    protected final Color[] lastGuess;
-    public static final Color[] none = new Color[]{Color.none};
+    protected final ColorManager manager;
+
 
     public Guesser(Table table) {
         this.table = table;
-        this.lastGuess = new Color[table.nColumns];
         this.manager = table.manager;
+        nextGuess = firstGuess();
     }
 
-    abstract protected void setFirstGuess();
+    abstract protected Guess firstGuess();
 
-    protected Color[] nextGuess() {
-        if (lastGuess[0] == null) {
-            setFirstGuess();
-            return lastGuess;
-        } else {
-            return nextNonFirstGuess();
-        }
+    protected Guess nextGuess;
+
+    /**
+     * get the next guess, without checking any matching
+     *
+     * @return the next guess
+     */
+    protected Guess nextGuess() {
+        var currentGuess = nextGuess;
+        nextGuess = currentGuess.nextGuess(manager);
+        return currentGuess;
     }
 
-    private Color[] nextNonFirstGuess() {
-        int i = 0;
-        boolean guessFound = false;
-        while (i < table.nColumns && !guessFound) {
-            if (manager.thereIsNextColor(lastGuess[i])) {
-                lastGuess[i] = manager.nextColor(lastGuess[i]);
-                guessFound = true;
-            } else {
-                lastGuess[i] = manager.firstColor();
-                i++;
-            }
-        }
-        return guessFound ? lastGuess : none;
-    }
-
-    private boolean guessMatch(Color[] guess) {
-        for (Row row : table.rows) {
-            if (!row.guessMatches(guess)) {
+    /**
+     * A guess matches if all rows in the table match the guess.
+     *
+     * @param guess to match against the rows
+     * @return true if all rows match
+     */
+    public boolean guessMatch(Guess guess) {
+        for (final var row : table.rows) {
+            if (!row.matches(guess)) {
                 return false;
             }
         }
         return true;
     }
 
-    public Row guess() {
-        Color[] guess = nextGuess();
-        while (guess != none && guessDoesNotMatch(guess)) {
-            guess = nextGuess();
-        }
-        return guess == none ? Row.none : new Row(guess);
+    private boolean guessDoesNotMatch(Guess guess) {
+        return !guessMatch(guess);
     }
 
-    private boolean guessDoesNotMatch(Color[] guess) {
-        return !guessMatch(guess);
+
+    /**
+     * Create a new Row object that contains a guess that matches all guesses and the
+     * responses to them that are on the table.
+     *
+     * @return the new Row to be added to the table along with the feedback afterwards.
+     */
+    public Guess guess() {
+        var guess = nextGuess();
+        while (guess != Guess.none && guessDoesNotMatch(guess)) {
+            guess = nextGuess();
+        }
+        return guess;
     }
 }

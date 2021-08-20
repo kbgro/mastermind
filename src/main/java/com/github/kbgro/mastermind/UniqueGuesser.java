@@ -1,6 +1,6 @@
 package com.github.kbgro.mastermind;
 
-import java.util.HashSet;
+import com.github.kbgro.mastermind.color.Color;
 
 public class UniqueGuesser extends Guesser {
     public UniqueGuesser(Table table) {
@@ -8,29 +8,21 @@ public class UniqueGuesser extends Guesser {
     }
 
     @Override
-    protected void setFirstGuess() {
-        int i = lastGuess.length - 1;
-        for (var color = table.manager.firstColor();
+    protected Guess firstGuess() {
+        final var colors = new Color[table.nrOfColumns()];
+        int i = colors.length - 1;
+        for (var color = manager.firstColor();
              i >= 0;
-             color = table.manager.nextColor(color)) {
-            lastGuess[i--] = color;
+             color = manager.nextColor(color)) {
+            colors[i--] = color;
         }
-    }
-
-    private boolean isNotUnique(Color[] guess) {
-        final var alreadyPresent = new HashSet<Color>();
-        for (final var color : guess) {
-            if (alreadyPresent.contains(color))
-                return true;
-            alreadyPresent.add(color);
-        }
-        return false;
+        return new Guess(colors);
     }
 
     @Override
-    protected Color[] nextGuess() {
-        Color[] guess = super.nextGuess();
-        while (isNotUnique(guess)) {
+    protected Guess nextGuess() {
+        var guess = super.nextGuess();
+        while (!guess.isUnique()) {
             guess = super.nextGuess();
         }
         return guess;
