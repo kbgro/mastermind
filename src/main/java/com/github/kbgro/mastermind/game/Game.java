@@ -1,4 +1,8 @@
-package com.github.kbgro.mastermind;
+package com.github.kbgro.mastermind.game;
+
+import com.github.kbgro.mastermind.Guess;
+import com.github.kbgro.mastermind.Row;
+import com.github.kbgro.mastermind.Table;
 
 public class Game {
     final Table table;

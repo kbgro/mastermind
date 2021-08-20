@@ -1,7 +1,11 @@
-package com.github.kbgro.mastermind;
+package com.github.kbgro.mastermind.game;
 
+import com.github.kbgro.mastermind.ColorManager;
+import com.github.kbgro.mastermind.Guess;
+import com.github.kbgro.mastermind.Table;
 import com.github.kbgro.mastermind.color.Color;
 import com.github.kbgro.mastermind.color.LetteredColorFactory;
+import com.github.kbgro.mastermind.game.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 

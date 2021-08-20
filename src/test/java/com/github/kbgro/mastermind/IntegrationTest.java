@@ -2,6 +2,7 @@ package com.github.kbgro.mastermind;
 
 import com.github.kbgro.mastermind.color.Color;
 import com.github.kbgro.mastermind.color.LetteredColorFactory;
+import com.github.kbgro.mastermind.game.Game;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
